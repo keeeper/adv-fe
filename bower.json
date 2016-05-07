@@ -1,0 +1,11 @@
+{
+  "name": "adv-fe",
+  "homepage": "https://github.com/keeeper/adv-fe",
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "backbone": "^1.3.3",
+    "react": ">0.1.0",
+    "angular": "^1.5.5",
+    "handlebars": "^4.0.5"
+  }
+}
