@@ -12,37 +12,79 @@ var csscomb = require('gulp-csscomb');
 var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
 var runSequence = require('run-sequence');
-var minifyCss = require('gulp-minify-css');
+//var minifyCss = require('gulp-minify-css');
+var cssnano = require('gulp-cssnano');
+var sourcemaps = require('gulp-sourcemaps');
 
-gulp.task('default', ['css']);
+gulp.task('default', ['libs', 'build']);
 
-gulp.task('copy-static', function () {
+
+gulp.task('copy-static', function() {
     return gulp.src(['images/**/*.{png,jpg,svg}', '*.html', '**.*.js'])
         .pipe( gulp.dest(destDir) );
 });
 
-gulp.task('bower', function () {
+gulp.task('bower', function() {
     return bower('libs');
 });
 
-gulp.task('css', function () {
+
+gulp.task('css', function() {
     return gulp.src('styles/**/*.less')
+        .pipe(sourcemaps.init())
         .pipe(concat('styles.css'))
         .pipe(less())
-        .pipe(gulpif(argv.prod, minifyCss()))
+        .pipe(cssnano())
+        .pipe(gulpif(argv.prod, sourcemaps.write()))
         .pipe(gulp.dest(destDir));
 });
 
-gulp.task( 'reload-page', function () {
-} );
 
-gulp.task( 'clean', function (cb) {
+gulp.task('build', ['copy-static', 'css']);
+
+
+gulp.task('libs', function (){
+    return gulp.src(['libs/**/*.min.js'])
+        .pipe( gulp.dest(destDir + '/libs') );
+});
+
+
+gulp.task('images', function (){
+    return gulp.src(['**/*.{png,jpg,svg}', '!node_modules/**', '!libs/**', '!bin/**'])
+        .pipe( gulp.dest(destDir) );
+});
+
+
+gulp.task('html', function (){
+    return gulp.src(['**/*.html', '!node_modules/**', '!libs/**', '!bin/**'])
+        .pipe( gulp.dest(destDir) );
+});
+
+
+gulp.task('clean', function () {
+    return gulp.src(destDir)
+            .pipe(clean({force: true}))
+            .pipe(gulp.dest(destDir));
+})
+
+
+
+
+
+
+
+
+
+gulp.task('reload-page', function () {
+});
+
+gulp.task('clean', function (cb) {
     return gulp.src( destDir + '/*', { read: false } )
         .pipe( clean( { force: true } ) );
-} );
+});
 
 
-gulp.task( 'watch', function () {
+gulp.task('watch', function () {
     gulp.watch('**/*.@(less)', [ 'css' ] );
 } );
 
