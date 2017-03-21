@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Lesson 1 HT</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div class="posts-list">
+	   <script id="post-template" type="text/x-handlebars-template">
+		   {{#each posts}}
+		      <div class="posts-list__item">
+			  	<p>{{description}}</p>
+		      </div>
+		    {{/each}}
+	   </script>
+	</div>
+	<script src="libs/jquery/dist/jquery.min.js"></script>
+	<script src="libs/handlebars/handlebars.min.js"></script>
+	<script src="posts.js"></script>
+	<script type="text/javascript">
+		var postTemplate = Handlebars.compile($('#post-template').html() );
+		$('.posts-list').append(postTemplate(data));
+	</script>
+</body>
+</html>
